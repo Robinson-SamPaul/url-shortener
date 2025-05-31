@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>URL Shortener</title>
+    <link rel="icon" type="image/png" href="/images/image.png" />
+    <!-- Font Awesome CDN -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 40px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 380px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #555;
+            text-align: left;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.8px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="url"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            margin-top: 18px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 28px;
+            word-wrap: break-word;
+        }
+
+        .result a {
+            color: #007bff;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .result a:hover {
+            text-decoration: underline;
+        }
+
+        #copyIcon {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 22px;
+            color: #007bff;
+            vertical-align: middle;
+            margin-left: 10px;
+            user-select: none;
+        }
+
+        #copyIcon:hover {
+            color: #0056b3;
+        }
+
+        #copyMsg {
+            color: green;
+            margin-left: 12px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener</h1>
+
+        <form th:action="@{/shorten}" method="post">
+            <label for="longUrl">Enter URL to shorten:</label>
+            <input type="url" id="longUrl" name="longUrl" required placeholder="https://example.com" />
+            <button type="submit">Shorten</button>
+        </form>
+
+        <div class="result" th:if="${shortUrl}">
+            Shortened URL:
+            <a id="shortUrlLink" th:href="${shortUrl}" th:text="${shortUrl}" target="_blank" rel="noopener noreferrer"></a>
+            <div id="copyIcon" onclick="copyToClipboard()" title="Copy to clipboard" >
+                <i class="fa-solid fa-copy"></i>
+            </div>
+            <span id="copyMsg"></span>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const rawHref = document.getElementById("shortUrlLink").getAttribute("href");
+            const fullUrl = rawHref.startsWith("http") ? rawHref : window.location.origin + rawHref;
+
+            navigator.clipboard.writeText(fullUrl)
+                .then(() => {
+                    console.log("Copy successful");
+                    document.getElementById("copyMsg").textContent = "Copied!";
+                    setTimeout(() => {
+                        document.getElementById("copyMsg").textContent = "";
+                    }, 2000);
+                    return navigator.clipboard.readText();
+                })
+                .then(text => {
+                    console.log("Copied text from clipboard:", text);
+                })
+                .catch(err => {
+                    console.error("Copy failed:", err);
+                });
+        }
+
+        const copyIconDiv = document.getElementById("copyIcon");
+
+        copyIconDiv.addEventListener("mousedown", () => {
+            const icon = copyIconDiv.querySelector("i");
+            icon.classList.remove("fa-copy");
+            icon.classList.add("fa-clipboard");
+        });
+
+        copyIconDiv.addEventListener("mouseup", () => {
+            const icon = copyIconDiv.querySelector("i");
+            icon.classList.remove("fa-clipboard");
+            icon.classList.add("fa-copy");
+        });
+
+        copyIconDiv.addEventListener("mouseleave", () => {
+            const icon = copyIconDiv.querySelector("i");
+            icon.classList.remove("fa-clipboard");
+            icon.classList.add("fa-copy");
+        });
+    </script>
+</body>
+</html>
