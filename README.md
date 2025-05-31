@@ -16,9 +16,9 @@ Effortlessly shorten long URLs into clean, easy-to-share links — all powered b
 
 ## 🛠️ Technologies Used
 
-| Frontend           | Backend            | Tools & Libraries       |
-|--------------------|--------------------|------------------------|
-| HTML5, CSS3, JS    | Java, Spring Boot  | Thymeleaf, Font Awesome |
+| Frontend        | Backend           | Tools & Libraries       |
+|-----------------|-------------------|-------------------------|
+| HTML5, CSS3, JS | Java, Spring Boot | Thymeleaf, Font Awesome |
 
 ---
 
